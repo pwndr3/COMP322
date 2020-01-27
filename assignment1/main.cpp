@@ -20,6 +20,14 @@ int main(int argc, char **argv) {
         // Display board for player
         displayBoard(board);
 
+        for(int i = 0; i < 27; i++) {
+            if(board[i] == 0)
+                cout << ". ";
+            else
+                cout << board[i] << " ";
+        }
+        cout << endl;
+
         // Player move
         string playerMove;
         cout << "Pick your move: ";
@@ -32,14 +40,14 @@ int main(int argc, char **argv) {
         } 
         board[stoi(playerMove) - 1] = 'X';
 
-        if(checkWinner(board))
-            break; // If player won the game, break now
+        if(checkWinner(board) || turnNumber++ >= 27)
+            break; // If player won the game or last move, exit game loop
 
         // Computer move
         computerMove(board);
-    } 
+    }
 
-    if(turnNumber == 27)
+    if(!checkWinner(board) && turnNumber > 27)
         cout << "END! It's a TIE!" << endl;
 
     return 0;
