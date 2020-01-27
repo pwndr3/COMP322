@@ -71,103 +71,123 @@ bool checkWinner(char board[]) {
 
     // Check row in same table
     if(winnerSymbol == 0) {
-        for(int table = 0; table < 3; table++) {
-            for(int row = 0; row < 3; row++) {
+        for(int table = 0; table < 3 && winnerSymbol == 0; table++) {
+            for(int row = 0; row < 3 && winnerSymbol == 0; row++) {
                 int row_idx = table * 9 + row * 3;
 
                 // If row has three same symbol, we have a winner
-                if(board[row_idx] == board[row_idx + 1] && board[row_idx] == board[row_idx + 2])
-                    winnerSymbol = board[row_idx];
+                if(board[row_idx] != 0) {
+                    if(board[row_idx] == board[row_idx + 1] && board[row_idx] == board[row_idx + 2])
+                        winnerSymbol = board[row_idx];
+                }
             }
         }
     }
 
     // Check row across tables
     if(winnerSymbol == 0) {
-        for(int row = 0; row < 3; row++) {
-            // x|.|.   .|x|.   .|.|x
-            if(board[3*row] == board[3*row + 10] && board[3*row] == board[3*row + 20])
-                winnerSymbol = board[3*row];
-            // .|.|x   .|x|.   x|.|.
-            else if(board[3*row + 2] == board[3*row + 10] && board[3*row] == board[3*row + 18])
-                winnerSymbol = board[3*row + 2];
+        for(int row = 0; row < 3 && winnerSymbol == 0; row++) {
+            if(board[3*row] != 0) {
+                // x|.|.   .|x|.   .|.|x
+                if(board[3*row] == board[3*row + 10] && board[3*row] == board[3*row + 20])
+                    winnerSymbol = board[3*row];
+            }
+            if(board[3*row + 2] != 0) {
+                // .|.|x   .|x|.   x|.|.
+                if(board[3*row + 2] == board[3*row + 10] && board[3*row] == board[3*row + 18])
+                    winnerSymbol = board[3*row + 2];
+            }
         }
     }
     
     // Check column in same table
     if(winnerSymbol == 0) {
-        for(int table = 0; table < 3; table++) {
-            for(int col = 0; col < 3; col++) {
+        for(int table = 0; table < 3 && winnerSymbol == 0; table++) {
+            for(int col = 0; col < 3 && winnerSymbol == 0; col++) {
                 int col_idx = table * 9 + col;
 
-                // If col has three same symbol, we have a winner
-                if(board[col_idx] == board[col_idx + 3] && board[col_idx] == board[col_idx + 6])
-                    winnerSymbol = board[col_idx];
+                if(board[col_idx] != 0) {
+                    // If col has three same symbol, we have a winner
+                    if(board[col_idx] == board[col_idx + 3] && board[col_idx] == board[col_idx + 6])
+                        winnerSymbol = board[col_idx];
+                }
             }
         }
     }
 
     // Check column across tables
     if(winnerSymbol == 0) {
-        for(int col = 0; col < 3; col++) {
-            // x|.|.   
-            //           x|.|.
-            //                       x|.|.
-            if(board[col] == board[col + 12] && board[col] == board[col + 24])
-                winnerSymbol = board[col];
-            //                       x|.|. 
-            //           x|.|.
-            // x|.|. 
-            else if(board[col+6] == board[col + 12] && board[col+6] == board[col + 18])
-                winnerSymbol = board[col+6];
+        for(int col = 0; col < 3 && winnerSymbol == 0; col++) {
+            if(board[col] != 0) {
+                // x|.|.   
+                //           x|.|.
+                //                       x|.|.
+                if(board[col] == board[col + 12] && board[col] == board[col + 24])
+                    winnerSymbol = board[col];
+            }
+            if(board[col+6] != 0) {
+                //                       x|.|. 
+                //           x|.|.
+                // x|.|. 
+                if(board[col+6] == board[col + 12] && board[col+6] == board[col + 18])
+                    winnerSymbol = board[col+6];
+            }
         }
     }
 
     // Check diagonal in same table
     if(winnerSymbol == 0) {
-        for(int table = 0; table < 3; table++) {
-            // x|.|.
-            // .|x|. 
-            // .|.|x
-            if(board[table * 9] == board[table * 9 + 4] && board[table * 9] == board[table * 9 + 8])
-                winnerSymbol = board[table * 9];
-            // .|.|x
-            // .|x|. 
-            // x|.|.
-            else if(board[table * 9 + 2] == board[table * 9 + 4] && board[table * 9 + 2] == board[table * 9 + 6])
-                winnerSymbol = board[table * 9 + 2];
+        for(int table = 0; table < 3 && winnerSymbol == 0; table++) {
+            if(board[table * 9] != 0) {
+                // x|.|.
+                // .|x|. 
+                // .|.|x
+                if(board[table * 9] == board[table * 9 + 4] && board[table * 9] == board[table * 9 + 8])
+                    winnerSymbol = board[table * 9];
+            }
+            if(board[table * 9 + 2] != 0) {
+                // .|.|x
+                // .|x|. 
+                // x|.|.
+                if(board[table * 9 + 2] == board[table * 9 + 4] && board[table * 9 + 2] == board[table * 9 + 6])
+                    winnerSymbol = board[table * 9 + 2];
+            }
         }
     }
 
     // Check diagonal across tables
     if(winnerSymbol == 0) {
-        // x|.|.   
-        //           .|x|.
-        //                       .|.|x
-        if(board[0] == board[13] && board[0] == board[26])
-            winnerSymbol = board[0];
-        // .|.|x   
-        //           .|x|.
-        //                       x|.|.
-        else if(board[2] == board[13] && board[2] == board[24])
-            winnerSymbol = board[2];
-        //                       x|.|. 
-        //           .|x|.
-        // .|.|x 
-        else if(board[8] == board[13] && board[8] == board[18])
-            winnerSymbol = board[8]; 
-        //                       .|.|x 
-        //           .|x|.
-        // x|.|. 
-        else if(board[6] == board[13] && board[6] == board[20])
-            winnerSymbol = board[6];     
+        if(board[13] != 0) {
+            // x|.|.   
+            //           .|x|.
+            //                       .|.|x
+            if(board[0] == board[13] && board[0] == board[26])
+                winnerSymbol = board[0];
+            // .|.|x   
+            //           .|x|.
+            //                       x|.|.
+            else if(board[2] == board[13] && board[2] == board[24])
+                winnerSymbol = board[2];
+            //                       x|.|. 
+            //           .|x|.
+            // .|.|x 
+            else if(board[8] == board[13] && board[8] == board[18])
+                winnerSymbol = board[8]; 
+            //                       .|.|x 
+            //           .|x|.
+            // x|.|. 
+            else if(board[6] == board[13] && board[6] == board[20])
+                winnerSymbol = board[6]; 
+        }    
     }
 
     // Check same space across tables
     if(winnerSymbol == 0) {
-        for(int cell = 0; cell < 9; cell++) {
-            if(board[cell] == board[cell + 9] && board[cell] == board[cell + 18])
-                winnerSymbol = board[cell];
+        for(int cell = 0; cell < 9 && winnerSymbol == 0; cell++) {
+            if(board[cell] != 0) {
+                if(board[cell] == board[cell + 9] && board[cell] == board[cell + 18])
+                    winnerSymbol = board[cell];
+            }
         }
     }
 

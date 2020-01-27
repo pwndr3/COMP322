@@ -47,8 +47,11 @@ int main(int argc, char **argv) {
         computerMove(board);
     }
 
-    if(!checkWinner(board) && turnNumber > 27)
+    if(turnNumber > 27 && !checkWinner(board))
         cout << "END! It's a TIE!" << endl;
+
+    // Display final state of the board
+    displayBoard(board);
 
     return 0;
 }
