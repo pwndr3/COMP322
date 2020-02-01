@@ -20,14 +20,6 @@ int main(int argc, char **argv) {
         // Display board for player
         displayBoard(board);
 
-        for(int i = 0; i < 27; i++) {
-            if(board[i] == 0)
-                cout << ". ";
-            else
-                cout << board[i] << " ";
-        }
-        cout << endl;
-
         // Player move
         string playerMove;
         cout << "Pick your move: ";

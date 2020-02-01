@@ -1,3 +1,5 @@
+#include <ctime>
+#include <cstdlib>
 #include <iostream>
 #include <string>
 
@@ -7,9 +9,13 @@ using namespace std;
 TODO:
     Validate input parameters
     Maybe C++ syntax for loops is better?
+    Add comments
 */
 
 void greetAndInstruct() {
+    // Initialize pseudo-random number generator
+    srand(time(0));
+
     // Greeting message
     cout << "Hello and welcome to the Tic-Tac-Toe challenge: Player against Computer." << endl;
     cout << "The board is numbered from 1 to 27 as per the following:" << endl << endl;
@@ -66,7 +72,7 @@ bool checkIfLegal(int cellNbre, char board[]) {
     return true;
 }
 
-bool checkWinner(char board[]) {
+char whosTheWinner(char board[]) {
     char winnerSymbol = 0;
 
     // Check row in same table
@@ -94,7 +100,7 @@ bool checkWinner(char board[]) {
             }
             if(board[3*row + 2] != 0) {
                 // .|.|x   .|x|.   x|.|.
-                if(board[3*row + 2] == board[3*row + 10] && board[3*row] == board[3*row + 18])
+                if(board[3*row + 2] == board[3*row + 10] && board[3*row + 2] == board[3*row + 18])
                     winnerSymbol = board[3*row + 2];
             }
         }
@@ -191,6 +197,12 @@ bool checkWinner(char board[]) {
         }
     }
 
+    return winnerSymbol;
+}
+
+bool checkWinner(char board[]) {
+    char winnerSymbol = whosTheWinner(board);
+
     if(winnerSymbol != 0) {
         if(winnerSymbol == 'X')
             cout << "END! Player has won the game!" << endl; 
@@ -204,10 +216,53 @@ bool checkWinner(char board[]) {
 }
 
 void computerMove(char board[]) {
+    int move = 0;
+    int legalMoves[27] = {0};
+    int legalMoveSize = 0;
+
+    // Build legal moves array
     for(int i = 1; i <= 27; i++) {
         if(checkIfLegal(i, board)) {
-            board[i-1] = 'O';
-            break;
+            // Add to legal moves
+            legalMoves[legalMoveSize++] = i;
         }
     }
+
+    // Check if a move can make the computer win
+    for(int i = 0; i < legalMoveSize; i++) {
+        int idx = legalMoves[i];
+
+        // Put O and see if computer wins
+        board[idx-1] = 'O';
+
+        if(whosTheWinner(board) == 'O') {
+            move = idx;
+            break;
+        }
+
+        board[idx-1] = 0;
+    }
+
+    // If not, check if a move can make the Player win
+    if(move == 0) {
+        for(int i = 0; i < legalMoveSize; i++) {
+            int idx = legalMoves[i];
+
+            // Put X and see if player wins
+            board[idx-1] = 'X';
+
+            if(whosTheWinner(board) == 'X') {
+                move = idx;
+                break;
+            }
+
+            board[idx-1] = 0;
+        }
+    }
+
+    // If not, random move
+    if(move == 0)
+        move = legalMoves[(rand() % legalMoveSize)];
+
+    board[move-1] = 'O';
 }
