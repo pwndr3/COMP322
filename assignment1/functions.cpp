@@ -5,11 +5,6 @@
 
 using namespace std;
 
-/*
-TODO:
-    Validate input parameters
-*/
-
 /** Show instructions and ask Player is he/she wants to play. Exit program if not.
  * 
  * Parameters: none

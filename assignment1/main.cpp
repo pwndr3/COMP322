@@ -24,13 +24,13 @@ int main(int argc, char **argv) {
 
         // Player move
         string playerMove;
-        cout << "Pick your move: ";
+        cout << "Pick your move (1-27): ";
         cin >> playerMove;
 
         // Make sure player move is valid
         while(!checkIfLegal(stoi(playerMove), board)) {
             cout << "Invalid move: " << playerMove << endl;
-            cout << "Pick your move: ";
+            cout << "Pick your move (1-27): ";
             cin >> playerMove;
         } 
         board[stoi(playerMove) - 1] = 'X';
