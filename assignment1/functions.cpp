@@ -8,10 +8,14 @@ using namespace std;
 /*
 TODO:
     Validate input parameters
-    Maybe C++ syntax for loops is better?
-    Add comments
 */
 
+/** Show instructions and ask Player is he/she wants to play. Exit program if not.
+ * 
+ * Parameters: none
+ * 
+ * Returns: none.
+*/
 void greetAndInstruct() {
     // Initialize pseudo-random number generator
     srand(time(0));
@@ -38,10 +42,17 @@ void greetAndInstruct() {
     exit(0);
 }
 
-// TODO make sure this works correctly
+/** Displays board as 3 separate 3x3 tables 
+ * 
+ * Parameters:
+ *  char board[]: array of size 27 containing the board
+ * 
+ * Returns: none
+ */
 void displayBoard (char board[]) {
     string boardASCII[3][9]; // Matrix that will contain the ASCII board
 
+    // Build the ASCII board
     for(int row = 0; row < 3; row++) {
         for(int col = 0; col < 9; col++) {
             int idx = (col / 3) * 9 + (col % 3) + (row * 3) + 1;
@@ -53,6 +64,7 @@ void displayBoard (char board[]) {
         }
     }
 
+    // Display ASCII board
     for(int row = 0; row < 3; row++) {
         cout << boardASCII[row][0] << " | " << boardASCII[row][1] << " | " << boardASCII[row][2] << "          ";
         cout << boardASCII[row][3] << " | " << boardASCII[row][4] << " | " << boardASCII[row][5] << "          ";
@@ -60,6 +72,14 @@ void displayBoard (char board[]) {
     }
 }
 
+/** Checks if move is legal: valid range and free cell
+ * 
+ * Parameters:
+ *  int cellNbre: move to play (between 1 and 27, inclusive)
+ *  char board[]: array of size 27 containing the board
+ * 
+ * Returns: (bool) True if valid move, false otherwise.
+ */
 bool checkIfLegal(int cellNbre, char board[]) {
     // Verify cellNbre input range
     if(cellNbre < 1 || cellNbre > 27)
@@ -72,7 +92,15 @@ bool checkIfLegal(int cellNbre, char board[]) {
     return true;
 }
 
+/** Checks if there is winner for the giving board.
+ * 
+ * Parameters:
+ *  char board[]: array of size 27 containing the board
+ * 
+ * Returns: (char) 'X' is Player won, 'O' is Computer won, 0 (NULL) otherwise
+ */
 char whosTheWinner(char board[]) {
+    // Default to 0 (no winner)
     char winnerSymbol = 0;
 
     // Check row in same table
@@ -200,9 +228,18 @@ char whosTheWinner(char board[]) {
     return winnerSymbol;
 }
 
+/** Checks if winner and prints its name if that's the case.
+ * 
+ * Parameters:
+ *  char board[]: array of size 27 containing the board
+ * 
+ * Returns: (bool) True if there is a winner, false otherwise.
+ */
 bool checkWinner(char board[]) {
+    // Determine if winner
     char winnerSymbol = whosTheWinner(board);
 
+    // If winner, display the winner and return true
     if(winnerSymbol != 0) {
         if(winnerSymbol == 'X')
             cout << "END! Player has won the game!" << endl; 
@@ -215,6 +252,16 @@ bool checkWinner(char board[]) {
     return false;
 }
 
+/** Plays the computer move. First tries to win with this move, then
+ * if no move has this property, keeps the Player from winning on its
+ * next move. Finally, if no other move has this property, play a random
+ * move.
+ * 
+ * Parameters:
+ *  char board[]: array of size 27 containing the board
+ * 
+ * Returns: none
+ */
 void computerMove(char board[]) {
     int move = 0;
     int legalMoves[27] = {0};
@@ -240,6 +287,7 @@ void computerMove(char board[]) {
             break;
         }
 
+        // Backtrack
         board[idx-1] = 0;
     }
 
@@ -256,6 +304,7 @@ void computerMove(char board[]) {
                 break;
             }
 
+            // Backtrack
             board[idx-1] = 0;
         }
     }
