@@ -1,5 +1,6 @@
 #include <ctime>
 #include <cstdlib>
+#include <iomanip>
 #include <iostream>
 #include <string>
 
@@ -62,8 +63,8 @@ void displayBoard (char board[]) {
     // Display ASCII board
     for(int row = 0; row < 3; row++) {
         cout << boardASCII[row][0] << " | " << boardASCII[row][1] << " | " << boardASCII[row][2] << "          ";
-        cout << boardASCII[row][3] << " | " << boardASCII[row][4] << " | " << boardASCII[row][5] << "          ";
-        cout << boardASCII[row][6] << " | " << boardASCII[row][7] << " | " << boardASCII[row][8] << endl;
+        cout << setw(2) << boardASCII[row][3] << " | " << setw(2) << boardASCII[row][4] << " | " << setw(2) << boardASCII[row][5] << "          ";
+        cout << setw(2) << boardASCII[row][6] << " | " << setw(2) << boardASCII[row][7] << " | " << setw(2) << boardASCII[row][8] << endl;
     }
 }
 
