@@ -8,6 +8,9 @@
         "unordered_map": "cpp",
         "vector": "cpp",
         "bitset": "cpp",
-        "locale": "cpp"
+        "locale": "cpp",
+        "random": "cpp",
+        "ostream": "cpp",
+        "chrono": "cpp"
     }
 }

@@ -2,7 +2,9 @@
 #define _BLACKJACK_H
 
 #include <algorithm>
+#include <chrono>
 #include <iostream>
+#include <random>
 #include <vector>
 
 // Card ranks
@@ -54,6 +56,7 @@ class Hand {
         void add(Card card);
         void clear();
         int getTotal();
+        void displayHand();
     
     private:
         // Private variables
@@ -67,9 +70,13 @@ class Deck {
 
         // Public methods
         Card deal();
+
     private:
         // Private variables
         std::vector<Card> m_cards;
+
+        // Private static variables
+        static std::default_random_engine m_rng;
 
         // Private methods
         void populate();
@@ -80,10 +87,13 @@ class AbstractPlayer {
     public:
         // Public methods
         virtual bool isDrawing() = 0;
+        virtual void showHand() = 0;
         bool isBusted();
 
         void add(Card card);
         void clear();
+        int getTotal();
+
     protected:
         // Protected variables
         Hand m_hand;
@@ -93,19 +103,22 @@ class HumanPlayer: public AbstractPlayer {
     public:
         // Public methods
         bool isDrawing();
-        void announce();
+        void announce(AbstractPlayer* winner, bool busted);
+        void showHand();
 };
 
 class ComputerPlayer: public AbstractPlayer {
     public:
         // Public methods
         bool isDrawing();
+        void showHand();
 };
 
 class BlackJackGame {
     public:
         // Public methods
         void play();
+
     private:
         // Private variables
         Deck m_deck;

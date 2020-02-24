@@ -82,13 +82,21 @@ int Hand::getTotal() {
     return total_ace_1;
 }
 
+void Hand::displayHand() {
+    for(Card card: this->m_cards) {
+        card.displayCard();
+        cout << " ";
+    }
+}
+
 // Deck
+default_random_engine Deck::m_rng = default_random_engine(chrono::system_clock::now().time_since_epoch().count());
 Deck::Deck() {
     this->populate();
 }
 
 void Deck::shuffle() {
-    random_shuffle(this->m_cards.begin(), this->m_cards.end());
+    std::shuffle(this->m_cards.begin(), this->m_cards.end(), Deck::m_rng);
 }
 
 Card Deck::deal() {
@@ -134,6 +142,10 @@ void AbstractPlayer::clear() {
     this->m_hand.clear();
 }
 
+int AbstractPlayer::getTotal() {
+    return this->m_hand.getTotal();
+}
+
 // HumanPlayer
 bool HumanPlayer::isDrawing() {
     cout << "Do you want to draw? (y/n):";
@@ -144,16 +156,83 @@ bool HumanPlayer::isDrawing() {
     return (ans == 'y');
 }
 
-void HumanPlayer::announce() {
+void HumanPlayer::announce(AbstractPlayer* winner, bool busted) {
+    if (winner == NULL) {
+        // Push
+        cout << "Push: No one wins." << endl << endl;
+    } else if(winner == this) {
+        // Human is winner
+        if(busted)
+            cout << "Casino busts." << endl;
+        cout << "Player wins." << endl << endl;
+    } else {
+        // Casino is winner
+        if(busted)
+            cout << "Player busts." << endl;
+        cout << "Casino wins." << endl << endl;
+    }
+}
 
+void HumanPlayer::showHand() {
+    cout << "Player: ";
+    this->m_hand.displayHand();
+    cout << "[" << this->getTotal() << "]" << endl;
 }
 
 // ComputerPlayer
 bool ComputerPlayer::isDrawing() {
-    return (this->m_hand.getTotal <= 16);
+    return (this->m_hand.getTotal() <= 16);
+}
+
+void ComputerPlayer::showHand() {
+    cout << "Casino: ";
+    this->m_hand.displayHand();
+    cout << "[" << this->getTotal() << "]" << endl;
 }
 
 // BlackJackGame
 void BlackJackGame::play() {
     // Initialize game
+    this->m_deck = Deck();
+    this->m_human.clear();
+    this->m_casino.clear();
+    
+    // Casino's first draw
+    this->m_casino.add(this->m_deck.deal());
+    this->m_casino.showHand();
+    
+    // Player's first draw
+    this->m_human.add(this->m_deck.deal());
+    this->m_human.add(this->m_deck.deal());
+    this->m_human.showHand();
+
+    // Player's turn
+    while(this->m_human.isDrawing()) {
+        this->m_human.add(this->m_deck.deal());
+        this->m_human.showHand();
+
+        if(this->m_human.isBusted()) {
+            this->m_human.announce(&this->m_casino, true);
+            return;
+        }
+    }
+
+    // Casino's turn
+    while(this->m_casino.isDrawing()) {
+        this->m_casino.add(this->m_deck.deal());
+        this->m_casino.showHand();
+
+        if(this->m_casino.isBusted()) {
+            this->m_human.announce(&this->m_human, true);
+            return;
+        }
+    }
+
+    // If no one busted, announce winner
+    if(this->m_human.getTotal() > this->m_casino.getTotal())
+        this->m_human.announce(&this->m_human, false);
+    else if(this->m_human.getTotal() < this->m_casino.getTotal())
+        this->m_human.announce(&this->m_casino, false);
+    else
+        this->m_human.announce(NULL, false);
 }
