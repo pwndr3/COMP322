@@ -65,6 +65,9 @@ void displayBoard (char board[]) {
         cout << boardASCII[row][0] << " | " << boardASCII[row][1] << " | " << boardASCII[row][2] << "          ";
         cout << setw(2) << boardASCII[row][3] << " | " << setw(2) << boardASCII[row][4] << " | " << setw(2) << boardASCII[row][5] << "          ";
         cout << setw(2) << boardASCII[row][6] << " | " << setw(2) << boardASCII[row][7] << " | " << setw(2) << boardASCII[row][8] << endl;
+        
+        if(row < 2)
+            cout << "---------          ------------          ------------" << endl;
     }
 }
 
